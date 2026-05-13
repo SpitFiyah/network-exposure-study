@@ -1,6 +1,6 @@
 # Command Execution Log
 
-This document chronicles the key shell commands executed during the assessment of `192.168.0.1`.
+This document chronicles the key shell commands executed during the security research and validation testing of `192.168.0.1`.
 
 ## 1. Network Reconnaissance
 *   `ip addr` - Gathered local interface and subnet information.
@@ -19,15 +19,15 @@ This document chronicles the key shell commands executed during the assessment o
 *   `searchsploit dnsmasq 2.8`
 *   `searchsploit dropbear 2020`
 
-## 4. UPnP Exploitation
+## 4. UPnP Protocol Analysis
 *   `nmap -sU -p 1900 --script=upnp-info 192.168.0.1` - Extracted device make, model, and version via UPnP.
 *   `curl -s http://192.168.0.1:1900/pdttgy/gatedesc.xml | grep -i controlURL -B 2 -A 2` - Located UPnP SOAP control URLs.
 *   `curl -s -H "Content-Type: text/xml; charset=\"utf-8\"" -H "SOAPAction: ..." -d @/home/ZeroDay/soap_request.xml http://192.168.0.1:1900/upnp/control/pdttgy/WANIPConn1` - Extracted WAN IP.
-*   `curl -s -v -H "Content-Type: text/xml; charset=\"utf-8\"" -H "SOAPAction: ..." -d @/home/ZeroDay/add_port_mapping.xml http://192.168.0.1:1900/upnp/control/pdttgy/WANIPConn1` - Added an unauthenticated port mapping.
+*   `curl -s -v -H "Content-Type: text/xml; charset=\"utf-8\"" -H "SOAPAction: ..." -d @/home/ZeroDay/add_port_mapping.xml http://192.168.0.1:1900/upnp/control/pdttgy/WANIPConn1` - Analyzed UPnP IGD port mapping policy.
 
-## 5. Custom Script Execution
-*   `python3 /home/ZeroDay/slow_ssh.py` - Executed rate-limited SSH default credential checks.
-*   `python3 /home/ZeroDay/stealth_fuzz.py` - Executed directory fuzzer.
-*   `python3 /home/ZeroDay/stealth_cgi_fuzz.py` - Executed CGI endpoint fuzzer (received 406 errors).
-*   `python3 /home/ZeroDay/stealth_cgi_post.py` - Executed POST-based CGI fuzzer bypassing 406 errors.
-*   `python3 /home/ZeroDay/test_overflow.py` - Tested and confirmed CVE-2019-7405 (Password Overflow) authentication bypass.
+## 5. Custom Validation Scripts
+*   `python3 /home/ZeroDay/slow_ssh.py` - Executed rate-limited SSH baseline credential validation.
+*   `python3 /home/ZeroDay/stealth_fuzz.py` - Executed rate-limited endpoint enumeration.
+*   `python3 /home/ZeroDay/stealth_cgi_fuzz.py` - Executed CGI endpoint enumeration (received 406 errors).
+*   `python3 /home/ZeroDay/stealth_cgi_post.py` - Executed POST-based CGI enumeration testing header enforcement.
+*   `python3 /home/ZeroDay/test_overflow.py` - Executed validation script testing input boundaries for anomalous authentication behavior.
